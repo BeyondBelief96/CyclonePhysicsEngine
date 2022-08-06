@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using CyclonePhysicsEngine.Particles;
+using Cyclone.Particles;
+using Cyclone.Core;
 using UnityEngine;
 
 public class Ballistic : MonoBehaviour
