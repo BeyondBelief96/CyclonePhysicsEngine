@@ -1,1 +1,5 @@
-# CycloneUnityDemos
+# Cyclone Physics Engine
+
+## Motivation
+
+This project is something I started out of pure curiosity of how game engines work. I have my bachelors degree in physics and love expanding and applying my knowledge of physics. I also love programming as a tool for solving unique and interesting problems. One day I was researching game engine programming and realized that the physics behind games is something that could potentially scratch both those itches. I did some research on game engine programming and found a few textbooks. One was "Game Physics" by David H. Eberly. The other was "Game Physics Engine Development" by Ian Millington. After reading through the first chapter or so of both, I realized just how much I enjoyed thinking about these problems and thus this repo was born. I started to read and code along with Ian's textbook in C# as my language of choice. I also wanted some way to test the physics I was programming so I learned some basic unity, combined the two projects and now we have this. This repository is just to show how I decided to implement the Cyclone engine developed by Ian Millington in C# (as the original engine was written in C++). It also comes with some fun unity scenes I used as testbeds for testing the physics engine.
