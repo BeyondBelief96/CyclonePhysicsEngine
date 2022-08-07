@@ -43,6 +43,15 @@ namespace Cyclone.Particles
         /// </summary>
         public Vector3 ForceAccumulated { get; set; }
 
+        /// <summary>
+        /// Returns true if the mass of the particle is finite.
+        /// </summary>
+        public bool HasFiniteMass => InverseMass != 0;
+
+        /// <summary>
+        /// Return true if the mass of the particle is infinite.
+        /// </summary>
+        public bool HasInfiniteMass => InverseMass == 0;
 
         /// <summary>
         /// Holds the inverse mass of the particle. It is more useful to hold the
@@ -98,6 +107,16 @@ namespace Cyclone.Particles
         public void SetInverseMass(Real m)
         {
             InverseMass = m;
+        }
+
+        /// <summary>
+        /// Adds the given force to the particle to be applied at the next iteration only.
+        /// Based on D'alemberts Principle.
+        /// </summary>
+        /// <param name="force"></param>
+        public void AddForce(Vector3 force)
+        {
+            ForceAccumulated += force;
         }
 
         /// <summary>
