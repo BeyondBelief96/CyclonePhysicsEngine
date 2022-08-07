@@ -43,14 +43,31 @@ public class Ballistic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Velocity = new Vector3(0.0f, 0.0f, 0.0f);
+        //Set the initial velocity
+        Velocity = new Vector3(0.0f, 0.0f, 30.0f);
+
+        //Set up acceleration due to gravity.
         Acceleration = new Vector3(0, -9.80f, 0.0f);
+
+        //Give object enough damping to reduce numerical errors.
         Damping = 0.99f;
+
+        //Give particle 2.0kg of mass.
         _particle.SetMass(2.0f);
+
+        //Set up our physics engines particle with the initial position of the object in unity.
         _particle.Position = new Vec3(transform.position.x, transform.position.y, transform.position.z);
+
+        //Set up our physics engines particle with the initial velocity.
         _particle.Velocity = new Vec3(Velocity.x, Velocity.y, Velocity.z);
+
+        //Setup our physics engines initial acceleration.
         _particle.Acceleration = new Vec3(Acceleration.x, Acceleration.y, Acceleration.z);
+
+        //Set up our physics engines damping parameter.
         _particle.Damping = Damping;
+
+        //Initialize unity objects position.
         SetObjectPosition(_particle.Position);
     }
 
