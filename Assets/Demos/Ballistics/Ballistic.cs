@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cyclone.Particles;
 using Vec3 = Cyclone.Core.Vector3;
 using UnityEngine;
+using Assets.Demos;
 
 /// <summary>
 /// A class representing a particle that has some initial position, velocity, and acceleration
@@ -44,7 +45,7 @@ public class Ballistic : MonoBehaviour
     void Start()
     {
         //Set the initial velocity
-        Velocity = new Vector3(0.0f, 0.0f, 30.0f);
+        Velocity = new Vector3(0.0f, 10.0f, 30.0f);
 
         //Set up acceleration due to gravity.
         Acceleration = new Vector3(0, -9.80f, 0.0f);
@@ -68,7 +69,7 @@ public class Ballistic : MonoBehaviour
         _particle.Damping = Damping;
 
         //Initialize unity objects position.
-        SetObjectPosition(_particle.Position);
+        HelperFunctions.SetObjectPosition(_particle.Position, transform);
     }
 
     // Update is called once per frame
@@ -76,22 +77,13 @@ public class Ballistic : MonoBehaviour
     {
         if(_particle.Position.Y <= 0)
         {
-            SetObjectPosition(new Vec3(transform.position.x, 0, transform.position.z));
+            HelperFunctions.SetObjectPosition(new Vec3(transform.position.x, 0, transform.position.z), transform);
         }
         else
         {
             _particle.Integrate(Time.deltaTime);
-            SetObjectPosition(_particle.Position);
+            HelperFunctions.SetObjectPosition(_particle.Position, transform);
         }
 
-    }
-
-    /// <summary>
-    /// Helper method to convert a Cyclone.Math.Vector3 to a UnityEngine.Vector3 position.
-    /// </summary>
-    /// <param name="position">The position.</param>
-    private void SetObjectPosition(Vec3 position)
-    {
-        transform.position = new Vector3((float)position.X, (float)position.Y, (float)position.Z);
     }
 }

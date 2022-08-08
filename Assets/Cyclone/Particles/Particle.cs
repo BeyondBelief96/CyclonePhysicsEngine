@@ -143,8 +143,7 @@ namespace Cyclone.Particles
             Position += Velocity * dt;
 
             //Work out the acceleration from the force.
-            //We'll add to this vector when we generate forces.
-            Vector3 resultingAcceleration = Acceleration;
+            Vector3 resultingAcceleration = Acceleration + ForceAccumulated * InverseMass;
 
             //Update linear velocity from the acceleration.
             Velocity += resultingAcceleration * dt;

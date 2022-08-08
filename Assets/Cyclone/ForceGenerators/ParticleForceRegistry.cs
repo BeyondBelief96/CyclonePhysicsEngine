@@ -21,6 +21,15 @@ namespace Assets.Cyclone.ForceGenerators
 
         #endregion
 
+        #region Ctor
+
+        public ParticleForceRegistry()
+        {
+            Registry = new List<ParticleForceRegistration>();
+        }
+
+        #endregion
+
         #region Public Methods 
 
         /// <summary>
@@ -71,6 +80,7 @@ namespace Assets.Cyclone.ForceGenerators
         /// <param name="duration"></param>
         public void UpdateForces(double duration)
         {
+            if (Registry.Count == 0 || Registry == null) return;
             for(int i = 0; i < Registry.Count; i++)
             {
                 Registry[i].ForceGenerator.UpdateForce(Registry[i].Particle, duration);
