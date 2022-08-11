@@ -32,10 +32,10 @@ namespace Assets.Cyclone.ForceGenerators
 
         #region Ctor
 
-        public ParticleSpringForceGenerator(Particle other, double sprintConstant, double restLength)
+        public ParticleSpringForceGenerator(Particle other, double springConstant, double restLength)
         {
             _otherParticle = other;
-            _springConstant = sprintConstant;  
+            _springConstant = springConstant;  
             _restLength = restLength;
         }
 
