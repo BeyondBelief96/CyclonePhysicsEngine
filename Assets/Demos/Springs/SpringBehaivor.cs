@@ -34,12 +34,12 @@ namespace Assets.Demos.Springs
 
             //Spring Anchor is located 10 meters high.
             var springAnchorPosition = new Vec3(0, 10, 0);
-            var springConstant = 5.0;
+            var springConstant = 10.0;
             var restLength = 5.0;
             _anchoredSpringForceGenerator = new ParticleAnchoredSpringForceGenerator(springAnchorPosition, springConstant, restLength);
             _dragForceGenerator = new ParticleDragForceGenerator(0.3, 0.0);
             pfg.AddForceGenerator(_particle, _anchoredSpringForceGenerator);
-            pfg.AddForceGenerator(_particle, _dragForceGenerator);
+            //pfg.AddForceGenerator(_particle, _dragForceGenerator);
             
         }
 

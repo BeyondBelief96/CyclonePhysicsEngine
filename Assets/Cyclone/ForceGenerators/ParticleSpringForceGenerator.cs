@@ -56,12 +56,11 @@ namespace Assets.Cyclone.ForceGenerators
 
             //Calculate the magnitude of the force.
             double magnitude = forceVector.Magnitude();
-            magnitude = Math.Abs(magnitude - _restLength);
-            magnitude *= _springConstant;
+            magnitude = (_restLength - magnitude) * _springConstant;
 
             //Calculate the final force and apply it.
             forceVector.Normalize();
-            forceVector *= -magnitude;
+            forceVector *= magnitude;
             particle.AddForce(forceVector);
         }
     }
