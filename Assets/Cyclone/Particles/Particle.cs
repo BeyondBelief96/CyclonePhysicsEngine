@@ -10,13 +10,32 @@ namespace Cyclone.Particles
     /// </summary>
     public class Particle
     {
+        #region Fields
+
+        /// <summary>
+        /// Holds the accumulated force to be applied at the next
+        /// simulation iteration only. This value is zeroed out at each
+        /// integration time step.
+        /// </summary>
+        private Vector3 ForceAccumulated;
+
+        /// <summary>
+        /// Holds the inverse mass of the particle. It is more useful to hold the
+        /// inverse mass because integration is simpler, and in real-time
+        /// simulation it is more useful to have objects with infinite mass (immovable)
+        /// than zero mass (unstable in numerical simulation).
+        /// When InverseMass = 0, object is immovable. (1/M).
+        /// </summary>
+        private Real InverseMass;
+        
+        #endregion
+
         #region Properties
 
         /// <summary>
         /// Holds the linear position of the particle in world space.
         /// </summary>
         public Vector3 Position { get; set; }
-
 
         /// <summary>
         /// Holds the linear velocity of the particle in world space.
@@ -37,13 +56,6 @@ namespace Cyclone.Particles
         public Real Damping { get; set; } = 0.99f;
 
         /// <summary>
-        /// Holds the accumulated force to be applied at the next
-        /// simulation iteration only. This value is zeroed out at each
-        /// integration time step.
-        /// </summary>
-        public Vector3 ForceAccumulated { get; set; }
-
-        /// <summary>
         /// Returns true if the mass of the particle is finite.
         /// </summary>
         public bool HasFiniteMass => InverseMass != 0;
@@ -53,19 +65,14 @@ namespace Cyclone.Particles
         /// </summary>
         public bool HasInfiniteMass => InverseMass == 0;
 
-        /// <summary>
-        /// Holds the inverse mass of the particle. It is more useful to hold the
-        /// inverse mass because integration is simpler, and because in real-time
-        /// simulation it is more useful to have objects with infinite mass (immovable)
-        /// than zero mass (unstable in numerical simulation).
-        /// When InverseMass = 0, object is immovable. (1/M).
-        /// </summary>
-        protected Real InverseMass { get; set; }
-
         #endregion
 
         #region Ctor
 
+        /// <summary>
+        /// Create a particle object with zero vectors for position,
+        /// velocity and acceleration.
+        /// </summary>
         public Particle()
         {
             Position = Vector3.ZeroVector;
@@ -89,6 +96,9 @@ namespace Cyclone.Particles
                 return 1.0 / InverseMass;
         }
 
+        /// <summary>
+        /// Returns the inverse mass of the particle.
+        /// </summary>
         public double GetInverseMass()
         {
             return InverseMass;
