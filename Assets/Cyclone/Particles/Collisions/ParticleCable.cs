@@ -1,4 +1,5 @@
 ﻿using Cyclone.Core;
+using Cyclone.Particles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,13 @@ using System.Threading.Tasks;
 
 namespace Assets.Cyclone.Particles.Collisions
 {
-    public class ParticleCable : ParticleLink
+    public class ParticleCable : ParticleContactGenerator
     {
+        /// <summary>
+        /// Holds the pair particles, generating a contact if they stray too far apart.
+        /// </summary>
+        public Particle[] Particles;
+
         /// <summary>
         /// Holds the max length of the cable.
         /// </summary>
@@ -19,7 +25,7 @@ namespace Assets.Cyclone.Particles.Collisions
         /// </summary>
         public double Restitution { get; set; }
 
-        public override double CurrentLength()
+        protected double CurrentLength()
         {
             Vector3 relativePosition = Particles[0].Position - Particles[1].Position;
             return relativePosition.Magnitude();
@@ -33,7 +39,8 @@ namespace Assets.Cyclone.Particles.Collisions
         /// <param name="limit"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public override uint AddContact(ParticleContact contact, uint limit)
+        public override uint AddContact(IList<Particle> particles, IList<ParticleContact> contacts, 
+            uint next)
         {
             //Find the length of the cable.
             double length = CurrentLength();
@@ -43,6 +50,8 @@ namespace Assets.Cyclone.Particles.Collisions
             {
                 return 0;
             }
+
+            var contact = contacts[(int) next];
 
             //Otherwise, return the contact.
             contact.Particles[0] = Particles[0];

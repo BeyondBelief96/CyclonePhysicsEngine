@@ -49,6 +49,15 @@ namespace Assets.Cyclone.Particles.Collisions
         #region Methods
 
         /// <summary>
+        /// Clears the contact of particles.
+        /// </summary>
+        public void Clear()
+        {
+            Particles[0] = null;
+            Particles[1] = null;
+        }
+
+        /// <summary>
         /// Resolves this contact for both velocity and interpenetration.
         /// </summary>
         /// <param name="duration"></param>

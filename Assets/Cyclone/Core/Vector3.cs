@@ -140,6 +140,13 @@ namespace Cyclone.Core
             Z*= vector.Z;
         }
 
+        public static double Distance(Vector3 a, Vector3 b)
+        {
+            double dx = a.X - b.X;
+            double dy = a.Y - b.Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
         /// <summary>
         /// Calculates and returns the dot (scalar) products between
         /// this vector and the given vector.

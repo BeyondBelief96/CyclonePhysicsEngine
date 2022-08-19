@@ -1,4 +1,5 @@
 ﻿using Cyclone.Core;
+using Cyclone.Particles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +8,27 @@ using System.Threading.Tasks;
 
 namespace Assets.Cyclone.Particles.Collisions
 {
-    public class ParticleRod : ParticleLink
+    public class ParticleRod : ParticleContactGenerator
     {
+        /// <summary>
+        /// Holds the pair of particles that are connected by this link.
+        /// </summary>
+        public Particle[] Particles;
+
         /// <summary>
         /// Holds the length of the rod.
         /// </summary>
         public double Length { get; set; }
 
-        public override double CurrentLength()
+        /// <summary>
+        /// Creates a particle rod.
+        /// </summary>
+        /// <param name="particles"></param>
+        /// <param name="length"></param>
+        public ParticleRod(Particle[] particles, double length)
         {
-            return Length;
+            Particles = particles;
+            Length = length;
         }
 
         /// <summary>
@@ -27,19 +39,19 @@ namespace Assets.Cyclone.Particles.Collisions
         /// <param name="limit"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public override uint AddContact(ParticleContact Contact, uint limit)
+        public override uint AddContact(IList<Particle> particles, IList<ParticleContact> contacts,
+            uint next)
         {
-            double currentLength = CurrentLength();
+            double currentLength = Vector3.Distance(Particles[0].Position, Particles[1].Position);
 
             //Check if we're overextended.
-            if(currentLength == Length)
-            {
-                return 0;
-            }
+            if (currentLength == Length) return 0;
+
+            var contact = contacts[(int) next];
 
             //Otherwise return the contact.
-            Contact.Particles[0] = Particles[0];
-            Contact.Particles[1] = Particles[1];
+            contact.Particles[0] = Particles[0];
+            contact.Particles[1] = Particles[1];
 
             //Calculate the normal.
             Vector3 normal = Particles[1].Position - Particles[0].Position;
@@ -48,17 +60,17 @@ namespace Assets.Cyclone.Particles.Collisions
             //The contact normal depends on whether we're extending or compressing.
             if(currentLength > Length)
             {
-                Contact.ContactNormal = normal;
-                Contact.Penetration = currentLength - Length;
+                contact.ContactNormal = normal;
+                contact.Penetration = currentLength - Length;
             }
             else
             {
-                Contact.ContactNormal = -1*normal;
-                Contact.Penetration = Length = currentLength;
+                contact.ContactNormal = -1*normal;
+                contact.Penetration = Length = currentLength;
             }
 
             //Always use zero restitution (no bounciness)
-            Contact.Restitution = 0;
+            contact.Restitution = 0;
 
             return 1;
 
