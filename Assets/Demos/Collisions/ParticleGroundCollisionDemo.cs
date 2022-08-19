@@ -11,6 +11,7 @@ public class ParticleGroundCollisionDemo : MonoBehaviour
     private ParticleForceRegistry _pfg;
     private ParticleContactResolver _contactResolver;
     private ParticleContact _contact;
+    private ParticleContact[] _contacts;
     private Particle _particle;
 
     // Start is called before the first frame update
@@ -35,6 +36,8 @@ public class ParticleGroundCollisionDemo : MonoBehaviour
         _contact.ContactNormal = new Vec3(0, 1, 0);
         _contact.Penetration = 0;
 
+        _contacts = new ParticleContact[1] { _contact };
+
         //Initialize contact resolver.
         _contactResolver = new ParticleContactResolver();
         _contactResolver.Iterations = 5;
@@ -48,7 +51,7 @@ public class ParticleGroundCollisionDemo : MonoBehaviour
 
         if(_particle.Position.Y <= 0)
         {
-            _contactResolver.ResolveContacts(new ParticleContact[] { _contact }, 1, Time.deltaTime);
+            _contactResolver.ResolveContacts(_contacts, (uint) _contacts.Length, Time.deltaTime);
         }
         HelperFunctions.SetObjectPosition(_particle.Position, transform);
     }
