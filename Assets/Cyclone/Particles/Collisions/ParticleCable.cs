@@ -57,7 +57,5 @@ namespace Assets.Cyclone.Particles.Collisions
 
             return 1;
         }
-
-
     }
 }

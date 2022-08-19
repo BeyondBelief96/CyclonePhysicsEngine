@@ -8,6 +8,7 @@ using Vec3 = Cyclone.Core.Vector3;
 public class ParticleGroundCollisionDemo : MonoBehaviour
 {
     private IParticleForceGenerator _gravityForceGenerator;
+    private IParticleForceGenerator _dragForceGenerator;
     private ParticleForceRegistry _pfg;
     private ParticleContactResolver _contactResolver;
     private ParticleContact _contact;
@@ -26,8 +27,10 @@ public class ParticleGroundCollisionDemo : MonoBehaviour
 
         //Initialize gravity force generator.
         _gravityForceGenerator = new ParticleGravityForceGenerator(-9.8);
+        _dragForceGenerator = new ParticleDragForceGenerator(2.0, 0);
         _pfg = new ParticleForceRegistry();
         _pfg.AddForceGenerator(_particle, _gravityForceGenerator);
+        //_pfg.AddForceGenerator(_particle, _dragForceGenerator);
 
         //Set up contact
         _contact = new ParticleContact();
