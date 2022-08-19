@@ -89,6 +89,11 @@ namespace Cyclone.Particles
                 return 1.0 / InverseMass;
         }
 
+        public double GetInverseMass()
+        {
+            return InverseMass;
+        }
+
         /// <summary>
         /// Set the mass of the particle. 
         /// </summary>
