@@ -148,7 +148,7 @@ namespace Assets.Cyclone.RigidBodies
             CalculateTransformMatrix(TransformMatrix, Position, Orientation);
 
             //Calculate the inertia tensor in world space.
-            TransformInertiaTensor(Orientation, InverseInertiaTensor, TransformMatrix);
+            TransformInertiaTensor(InverseInertiaTensor, TransformMatrix);
         }
 
         public void SetInertiaTensor(Matrix3 inertiaTensor)
@@ -274,6 +274,8 @@ namespace Assets.Cyclone.RigidBodies
 
         /// <summary>
         /// Function that creates a transform matrix from a position and orientation.
+        /// This transformation matrix is used to transfrom from the objects local coordinates 
+        /// to world coordinates.
         /// </summary>
         /// <param name="transformMatrix"></param>
         /// <param name="position"></param>
@@ -306,7 +308,12 @@ namespace Assets.Cyclone.RigidBodies
             TransformMatrix = transformMatrix;
         }
 
-        public void TransformInertiaTensor(Quaternion q, Matrix3 iitBody,
+        /// <summary>
+        /// Transforms the bodys inertia tensor from local coordinates to world coordinates.
+        /// </summary>
+        /// <param name="iitBody"></param>
+        /// <param name="rotMat"></param>
+        private void TransformInertiaTensor(Matrix3 iitBody,
             Matrix4 rotMat)
         {
             double t4 = rotMat.Data[0] * iitBody.Data[0] +
