@@ -10,7 +10,7 @@ namespace Assets.Cyclone.ForceGenerators
     /// <summary>
     /// A force generator can be asked to add a force to one or more particles.
     /// </summary>
-    public interface IParticleForceGenerator : IForceGenerator
+    public interface IParticleForceGenerator
     {
         /// <summary>
         /// A generator implementing this function needs to calculate and update the force

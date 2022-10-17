@@ -42,7 +42,7 @@ namespace Assets.Cyclone.ForceGenerators
         /// </summary>
         /// <param name="particle"></param>
         /// <param name="fg"></param>
-        public void AddForceGenerator(RigidBody body, IParticleForceGenerator fg)
+        public void AddForceGenerator(RigidBody body, IForceGenerator fg)
         {
             Registry.Add(new RigidBodyForceRegistration()
             {
