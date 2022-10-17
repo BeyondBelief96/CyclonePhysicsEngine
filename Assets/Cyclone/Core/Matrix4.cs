@@ -8,26 +8,26 @@ using System.Threading.Tasks;
 namespace Assets.Cyclone.Core
 {
     /// <summary>
-    /// Holds a transformation matrix, consisting of a rotation matrix
-    /// and a position. The matrix has 12 elements, and it is assumed that the
-    /// remaining four are (0, 0, 0, 1), producing a homogeneous matrix.
+    /// Holds a transformation matriX, consisting of a rotation matriX
+    /// and a position. The matriX has 12 elements, and it is assumed that the
+    /// remaining four are (0, 0, 0, 1), producing a homogeneous matriX.
     /// </summary>
     public class Matrix4
     {
         #region Properties
 
         /// <summary>
-        /// Holds the matrix elements. This matrix has 3 rows by 4 columns.
+        /// Holds the matriX elements. This matriX has 3 rows by 4 columns.
         /// </summary>
         public double[] Data = new double[12];
 
         /// <summary>
-        /// The determinant of this matrix.
+        /// The determinant of this matriX.
         /// </summary>
         public double Determinant => CalculateDeterminant();
 
         /// <summary>
-        /// Returns whether or not the matrix is invertible based on the value
+        /// Returns whether or not the matriX is invertible based on the value
         /// of the determinant.
         /// </summary>
         public bool Invertible => Determinant == 0 ? false : true;
@@ -35,7 +35,7 @@ namespace Assets.Cyclone.Core
         #endregion
 
         /// <summary>
-        /// Initializes and empty 3x4 matrix.
+        /// Initializes and empty 3X4 matriX.
         /// </summary>
         public Matrix4()
         {
@@ -45,7 +45,7 @@ namespace Assets.Cyclone.Core
         #region Ctor
 
         /// <summary>
-        /// Creates a 3x4 matrix using the passsed in values.
+        /// Creates a 3X4 matriX using the passsed in values.
         /// </summary>
         /// <param name="m11"></param>
         /// <param name="m12"></param>
@@ -82,7 +82,7 @@ namespace Assets.Cyclone.Core
         #region Public Methods
 
         /// <summary>
-        /// Transform the given vector 'v' by this matrix.
+        /// Transform the given vector 'v' by this matriX.
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -92,7 +92,7 @@ namespace Assets.Cyclone.Core
         }
 
         /// <summary>
-        /// Sets this matrix to the inverse of itself if the 4th row were [0, 0, 0, 1].
+        /// Sets this matriX to the inverse of itself if the 4th row were [0, 0, 0, 1].
         /// </summary>
         public void SetInverse()
         {
@@ -125,7 +125,7 @@ namespace Assets.Cyclone.Core
         }
 
         /// <summary>
-        /// Returns a new matrix which is the inverse of this matrix.
+        /// Returns a new matriX which is the inverse of this matriX.
         /// </summary>
         /// <returns></returns>
         public Matrix4 Inverse()
@@ -135,12 +135,52 @@ namespace Assets.Cyclone.Core
             return result;
         }
 
+        public void SetOrientation(Quaternion q, Vector3 pos)
+        {
+            Data[0] = 1 - (2 * q.J * q.J + 2 * q.K * q.K);
+            Data[1] = 2 * q.I * q.J + 2 * q.K * q.R;
+            Data[2] = 2 * q.I * q.K - 2 * q.J * q.R;
+            Data[3] = pos.X;
+            Data[4] = 2 * q.I * q.J - 2 * q.K * q.R;
+            Data[5] = 1 - (2 * q.I * q.I + 2 * q.K * q.K);
+            Data[6] = 2 * q.J * q.K + 2 * q.I * q.R;
+            Data[7] = pos.Y;
+            Data[8] = 2 * q.I * q.K + 2 * q.J * q.R;
+            Data[9] = 2 * q.J * q.K - 2 * q.I * q.R;
+            Data[10] = 1 - (2 * q.I * q.I + 2 * q.J * q.J);
+            Data[11] = pos.Z;
+        }
+
+        /// <summary>
+        /// Transform the given vector by the transformational inverse of this matrix.
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public Vector3 TransformInverse(Vector3 vector)
+        {
+            Vector3 tmp = vector;
+            tmp.X -= Data[3];
+            tmp.Y -= Data[7];
+            tmp.Z -= Data[11];
+            return new Vector3(
+            tmp.X * Data[0] +
+            tmp.Y * Data[4] +
+            tmp.Z * Data[8],
+            tmp.X * Data[1] +
+            tmp.Y * Data[5] +
+            tmp.Z * Data[9],
+            tmp.X * Data[2] +
+            tmp.Y * Data[6] +
+            tmp.Z * Data[10]
+            );
+        }
+
         #endregion
 
         #region Private Methods
 
         /// <summary>
-        /// Calculates the determinant of this matrix as if it were a 4x4 matrix
+        /// Calculates the determinant of this matriX as if it were a 4X4 matriX
         /// with [0, 0, 0 ,1] as the last row.
         /// </summary>
         /// <returns></returns>
@@ -152,6 +192,46 @@ namespace Assets.Cyclone.Core
             Data[0] * Data[9] * Data[6] -
             Data[4] * Data[1] * Data[10] +
             Data[0] * Data[5] * Data[10];
+        }
+
+        /// <summary>
+        /// Transform the given direction vector by this matrix.
+        /// </summary>
+        /// <param name="vector"></param>
+        public Vector3 TransformDirection(Vector3 vector)
+        {
+            return new Vector3(
+            vector.X * Data[0] +
+            vector.Y * Data[1] +
+            vector.Z * Data[2],
+            vector.X * Data[4] +
+            vector.Y * Data[5] +
+            vector.Z * Data[6],
+            vector.X * Data[8] +
+            vector.Y * Data[9] +
+            vector.Z * Data[10]
+);
+        }
+
+        /// <summary>
+        /// Transform the given direction vector by the
+        /// transformational inverse of this matrix.
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public Vector3 TransformInverseDirection(Vector3 vector)
+        {
+            return new Vector3(
+            vector.X * Data[0] +
+            vector.Y * Data[4] +
+            vector.Z * Data[8],
+            vector.X * Data[1] +
+            vector.Y * Data[5] +
+            vector.Z * Data[9],
+            vector.X * Data[2] +
+            vector.Y * Data[6] +
+            vector.Z * Data[10]
+);
         }
 
         #endregion

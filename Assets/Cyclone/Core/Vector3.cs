@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Cyclone.Core;
+using System;
 using Real = System.Double;
 
 namespace Cyclone.Core
@@ -210,6 +211,26 @@ namespace Cyclone.Core
 
             //Use both a and b (which are unit length) to find b that is perpendicular to both.
             b = a.CrossProduct(c);
+        }
+
+        public Vector3 LocalToWorld(Vector3 local, Matrix4 transform)
+        {
+            return transform.Transform(local);
+        }
+
+        public Vector3 WorldToLocal(Vector3 world, Matrix4 transform)
+        {
+            return transform.TransformInverse(world);
+        }
+
+        public Vector3 LocalToWorldDirection(Vector3 local, Matrix4 transform)
+        {
+            return transform.TransformDirection(local);
+        }
+
+        public Vector3 WorldToLocalDirection(Vector3 world, Matrix4 transform)
+        {
+            return transform.TransformDirection(world);
         }
 
         #endregion

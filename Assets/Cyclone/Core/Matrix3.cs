@@ -154,6 +154,23 @@ namespace Assets.Cyclone.Core
             return result;
         }
 
+        /// <summary>
+        /// Sets this matrix to be the rotation matrix corresponding to
+        /// the given quaternion.
+        /// </summary>
+        public void SetOrientation(Quaternion q)
+        {
+            Data[0] = 1 - (2 * q.J * q.J + 2 * q.K * q.K);
+            Data[1] = 2 * q.I * q.J + 2 * q.K * q.R;
+            Data[2] = 2 * q.I * q.K - 2 * q.J * q.R;
+            Data[3] = 2 * q.I * q.J - 2 * q.K * q.R;
+            Data[4] = 1 - (2 * q.I * q.I + 2 * q.K * q.K);
+            Data[5] = 2 * q.J * q.K + 2 * q.I * q.R;
+            Data[6] = 2 * q.I * q.K + 2 * q.J * q.R;
+            Data[7] = 2 * q.J * q.K - 2 * q.I * q.R;
+            Data[8] = 1 - (2 * q.I * q.I + 2 * q.J * q.J);
+        }
+
         #endregion
 
         #region Private Methods
