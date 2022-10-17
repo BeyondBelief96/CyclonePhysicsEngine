@@ -213,20 +213,69 @@ namespace Cyclone.Core
             b = a.CrossProduct(c);
         }
 
+        /// <summary>
+        /// Returns a new vector which is the result of adding this vector with the given vector
+        /// scaled by the given scale.
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <param name="scale"></param>
+        /// <returns></returns>
+        public Vector3 AddScaledVector(Vector3 vector, double scale)
+        {
+            Vector3 result = new Vector3();
+            result = vector;
+            result.X *= scale;
+            result.Y *= scale;
+            result.Z *= scale;
+            result += this;
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a given local coordinate vector to world coordinates using
+        /// the given transformation matrix.
+        /// </summary>
+        /// <param name="local"></param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
+
         public Vector3 LocalToWorld(Vector3 local, Matrix4 transform)
         {
             return transform.Transform(local);
         }
 
+        /// <summary>
+        /// Converts the given world coordinate vector to local coordinates
+        /// using the given transformation matrix.
+        /// </summary>
+        /// <param name="world"></param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
         public Vector3 WorldToLocal(Vector3 world, Matrix4 transform)
         {
             return transform.TransformInverse(world);
         }
 
+
+        /// <summary>
+        /// Convert a given local coordinate direction vector to world coordinates using
+        /// the given transformation matrix.
+        /// </summary>
+        /// <param name="local"></param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
         public Vector3 LocalToWorldDirection(Vector3 local, Matrix4 transform)
         {
             return transform.TransformDirection(local);
         }
+
+        /// <summary>
+        /// Converts the given world coordinate direction vector to local coordinates
+        /// using the given transformation matrix.
+        /// </summary>
+        /// <param name="world"></param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
 
         public Vector3 WorldToLocalDirection(Vector3 world, Matrix4 transform)
         {
