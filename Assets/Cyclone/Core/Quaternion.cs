@@ -50,6 +50,7 @@ namespace Assets.Cyclone.Core
             I = i;
             J = j;
             K = k;
+            Data = new double[4] { r, i, j, k };
         }
 
         #endregion
