@@ -1,48 +1,49 @@
 ﻿using Cyclone.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assets.Cyclone.Core
 {
     /// <summary>
-    /// Holds a transformation matriX, consisting of a rotation matriX
-    /// and a position. The matriX has 12 elements, and it is assumed that the
-    /// remaining four are (0, 0, 0, 1), producing a homogeneous matriX.
+    /// Holds a transform matrix, consisting of a rotation matrix and
+    /// a position. The matrix has 12 elements, it is assumed that the
+    /// remaining four are (0,0,0,1); producing a homogenous matrix.
     /// </summary>
     public class Matrix4
     {
         #region Properties
 
         /// <summary>
-        /// Holds the matriX elements. This matriX has 3 rows by 4 columns.
+        /// Holds the matrix elements. This matriXx has 3 rows by 4 columns.
         /// </summary>
         public double[] Data = new double[12];
 
         /// <summary>
-        /// The determinant of this matriX.
+        /// The determinant of this matrix.
         /// </summary>
         public double Determinant => CalculateDeterminant();
 
         /// <summary>
-        /// Returns whether or not the matriX is invertible based on the value
+        /// Returns whether or not the matrix is invertible based on the value
         /// of the determinant.
         /// </summary>
         public bool Invertible => Determinant == 0 ? false : true;
 
+        /// <summary>
+        /// Creates an identity matrix.
+        /// </summary>
+        public static readonly Matrix4 Identity = new Matrix4(1, 0, 0, 0,
+                                               0, 1, 0, 0,
+                                               0, 0, 1, 0);
         #endregion
 
+        #region Ctor
+
         /// <summary>
-        /// Initializes and empty 3X4 matriX.
+        /// Initializes and empty 3X4 matrix.
         /// </summary>
         public Matrix4()
         {
 
         }
-
-        #region Ctor
 
         /// <summary>
         /// Creates a 3X4 matriX using the passsed in values.
@@ -89,6 +90,17 @@ namespace Assets.Cyclone.Core
         public Vector3 Transform(Vector3 v)
         {
             return this * v;
+        }
+
+        /// <summary>
+        /// Gets a vector representing one axis (i.e. one column) in the matrix.
+        /// </summary>
+        /// <param name="i">The row to return. Row 3 corresponds 
+        /// to the position of the transform matrix.</param>
+        /// <returns></returns>
+        public Vector3 GetAxisVector(int i)
+        {
+            return new Vector3(Data[i], Data[i + 4], Data[i + 8]);
         }
 
         /// <summary>

@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using Cyclone.Particles;
 using Vec3 = Cyclone.Core.Vector3;
-using UnityEngine;
 using Assets.Demos;
+using UnityEngine;
 
 /// <summary>
 /// A class representing a particle that has some initial position, velocity, and acceleration

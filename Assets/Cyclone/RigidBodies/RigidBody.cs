@@ -68,7 +68,7 @@ namespace Assets.Cyclone.RigidBodies
         /// Holds the angular velocity, or rotation, of the rigid body
         /// in world space.
         /// </summary>
-        public Vector3 Rotation { get; set; }
+        public Vector3 AngularVelocity { get; set; }
 
         /// <summary>
         /// Holds the transformation matrix for converting body space into
@@ -123,6 +123,20 @@ namespace Assets.Cyclone.RigidBodies
 
         #endregion
 
+        #region Ctor
+
+        public RigidBody()
+        {
+            Position = Vector3.ZeroVector;
+            Velocity = Vector3.ZeroVector;
+            Acceleration = Vector3.ZeroVector;
+            Orientation = new Quaternion(0, 0, 0, 0);
+            InverseInertiaTensor = Matrix3.ZeroMatrix;
+            InverseInertiaTensorWorld = Matrix3.ZeroMatrix;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -132,6 +146,15 @@ namespace Assets.Cyclone.RigidBodies
         public double GetMass()
         {
             return 1.0 / InverseMass;
+        }
+
+        /// <summary>
+        /// Set the mass of the rigid body.
+        /// </summary>
+        /// <param name="mass"></param>
+        public void SetMass(double mass)
+        {
+            InverseMass = 1.0 / mass;
         }
 
         /// <summary>
@@ -145,7 +168,7 @@ namespace Assets.Cyclone.RigidBodies
             Orientation.Normalize();
             
             //Calculate the transform matrix for the body.
-            CalculateTransformMatrix(TransformMatrix, Position, Orientation);
+            CalculateTransformMatrix(Position, Orientation);
 
             //Calculate the inertia tensor in world space.
             TransformInertiaTensor(InverseInertiaTensor, TransformMatrix);
@@ -211,10 +234,10 @@ namespace Assets.Cyclone.RigidBodies
         public void AddForceAtBodyPoint(Vector3 force, Vector3 point)
         {
             //Convert to coordinates relative to center of mass
-            //Vector3 pt = GetPointInWorldSpace(point);
-            //AddForceAtPoint(force, pt);
+            Vector3 pt = GetPointInWorldSpace(point);
+            AddForceAtPoint(force, pt);
 
-            //IsAwake = true;
+            IsAwake = true;
         }
 
         /// <summary>
@@ -238,7 +261,7 @@ namespace Assets.Cyclone.RigidBodies
         {
             //Calculate the linear acceleration from force inputs.
             var lastFrameAcceleration = Acceleration;
-            lastFrameAcceleration.AddScaledVector(ForceAccumulated, InverseMass);
+            lastFrameAcceleration = lastFrameAcceleration.AddScaledVector(ForceAccumulated, InverseMass);
 
             //Calculate the angular acceleration from torque inputs.
             Vector3 angularAcceleration = InverseInertiaTensorWorld.Transform(TorqueAccumulated);
@@ -248,18 +271,18 @@ namespace Assets.Cyclone.RigidBodies
             Velocity = Velocity.AddScaledVector(lastFrameAcceleration, duration);
 
             //Update angular velocity from both acceleration and impulse.
-            Rotation = Rotation.AddScaledVector(angularAcceleration, duration);
+            AngularVelocity = AngularVelocity.AddScaledVector(angularAcceleration, duration);
 
             //Impose drag
             Velocity *= Math.Pow(Damping, duration);
-            Rotation *= Math.Pow(AngularDamping, duration);
+            AngularVelocity *= Math.Pow(AngularDamping, duration);
 
             //Adjust positions
             //Update linear position
             Position = Position.AddScaledVector(Velocity, duration);
 
             //Update angular Position
-            Orientation.AddScaledVector(Rotation, duration);
+            Orientation.AddScaledVector(AngularVelocity, duration);
 
             //Normalize the orientation, and update the matrices with the new position and orientation.
             CalculateDerivedData();
@@ -280,9 +303,9 @@ namespace Assets.Cyclone.RigidBodies
         /// <param name="transformMatrix"></param>
         /// <param name="position"></param>
         /// <param name="orientation"></param>
-        private void CalculateTransformMatrix(Matrix4 transformMatrix,
-            Vector3 position, Quaternion orientation)
+        private void CalculateTransformMatrix(Vector3 position, Quaternion orientation)
         {
+            Matrix4 transformMatrix = new Matrix4();
             transformMatrix.Data[0] = 1 - 2 * orientation.J * orientation.J -
             2 * orientation.K * orientation.K;
             transformMatrix.Data[1] = 2 * orientation.I * orientation.J -

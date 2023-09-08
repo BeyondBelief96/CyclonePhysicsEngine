@@ -16,6 +16,8 @@ namespace Assets.Cyclone.Core
     {
         #region Fields
 
+        public static Matrix3 ZeroMatrix => new Matrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
+
         /// <summary>
         /// Holds the matrix elements. This matrix is 3 rows by 3 columns.
         /// </summary>
@@ -171,11 +173,30 @@ namespace Assets.Cyclone.Core
             Data[8] = 1 - (2 * q.I * q.I + 2 * q.J * q.J);
         }
 
+        /// <summary>
+        /// Interpolates a couple of matrices.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="prop"></param>
+        /// <returns></returns>
+        public static Matrix3 LinearInterpolate(Matrix3 a, Matrix3 b, double prop)
+        {
+            Matrix3 result = Matrix3.ZeroMatrix;
+            double omp = 1.0 - prop;
+            for (uint i = 0; i < 9; i++)
+            {
+                result.Data[i] = a.Data[i] * omp + b.Data[i] * prop;
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Private Methods
 
-        
+
         private double CalculateDeterminant(Matrix3 m)
         {
             double t1 = m.Data[0] * m.Data[4];
